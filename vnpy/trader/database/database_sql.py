@@ -87,6 +87,7 @@ def init_models(db: Database, driver: Driver):
         class Meta:
             database = db
             indexes = ((("symbol", "exchange", "interval", "datetime"), True),)
+            table_name = 'person'
 
         @staticmethod
         def from_bar(bar: BarData):

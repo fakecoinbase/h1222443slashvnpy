@@ -90,6 +90,7 @@ class BaseGateway(ABC):
         event = Event(type, data)
         self.event_engine.put(event)
 
+
     def on_tick(self, tick: TickData) -> None:
         """
         Tick event push.
@@ -140,6 +141,7 @@ class BaseGateway(ABC):
         """
         Contract event push.
         """
+
         self.on_event(EVENT_CONTRACT, contract)
 
     def write_log(self, msg: str) -> None:

@@ -366,6 +366,7 @@ class CtpMdApi(MdApi):
         # If not connected, then start connection first.
         if not self.connect_status:
             path = get_folder_path(self.gateway_name.lower())
+
             self.createFtdcMdApi(str(path) + "\\Md")
 
             self.registerFront(address)
@@ -528,8 +529,11 @@ class CtpTdApi(TdApi):
 
             if not n:
                 break
+
             else:
+
                 sleep(1)
+
 
     def onRspQryInvestorPosition(self, data: dict, error: dict, reqid: int, last: bool):
         """"""

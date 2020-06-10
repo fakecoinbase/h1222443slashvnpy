@@ -52,6 +52,7 @@ class RecorderEngine(BaseEngine):
         """"""
         setting = load_json(self.setting_filename)
         self.tick_recordings = setting.get("tick", {})
+
         self.bar_recordings = setting.get("bar", {})
 
     def save_setting(self):
@@ -72,6 +73,7 @@ class RecorderEngine(BaseEngine):
                 if task_type == "tick":
                     database_manager.save_tick_data([data])
                 elif task_type == "bar":
+                    self.write_log("一分析k线已插入数据库")
                     database_manager.save_bar_data([data])
 
             except Empty:
@@ -103,6 +105,7 @@ class RecorderEngine(BaseEngine):
             return
 
         if Exchange.LOCAL.value not in vt_symbol:
+
             contract = self.main_engine.get_contract(vt_symbol)
             if not contract:
                 self.write_log(f"找不到合约：{vt_symbol}")

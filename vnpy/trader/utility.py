@@ -42,6 +42,7 @@ def _get_trader_dir(temp_name: str) -> Tuple[Path, Path]:
     cwd = Path.cwd()
     temp_path = cwd.joinpath(temp_name)
 
+
     # If .vntrader folder exists in current working directory,
     # then use it as trader running path.
     if temp_path.exists():
@@ -54,7 +55,7 @@ def _get_trader_dir(temp_name: str) -> Tuple[Path, Path]:
     # Create .vntrader folder under home path if not exist.
     if not temp_path.exists():
         temp_path.mkdir()
-
+    print(home_path,'and',temp_path)
     return home_path, temp_path
 
 
@@ -108,6 +109,7 @@ def save_json(filename: str, data: dict) -> None:
     Save data into json file in temp path.
     """
     filepath = get_file_path(filename)
+
     with open(filepath, mode="w+", encoding="UTF-8") as f:
         json.dump(
             data,

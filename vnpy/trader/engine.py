@@ -411,6 +411,7 @@ class OmsEngine(BaseEngine):
         contract = event.data
         self.contracts[contract.vt_symbol] = contract
 
+
     def get_tick(self, vt_symbol: str) -> Optional[TickData]:
         """
         Get latest market tick data by vt_symbol.
