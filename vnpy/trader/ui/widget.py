@@ -9,7 +9,7 @@ from typing import Any, Dict
 from copy import copy
 from tzlocal import get_localzone
 
-from PyQt5 import QtCore, QtGui, QtWidgets, Qt
+from PyQt5 import QtCore, QtGui, QtWidgets
 import rqdatac
 import numpy as np
 
@@ -245,8 +245,8 @@ class BaseMonitor(QtWidgets.QTableWidget):
         Register event handler into event engine.
         """
         if self.event_type:
-            self.signal.connect(self.process_event)
-            self.event_engine.register(self.event_type, self.signal.emit)
+
+            self.event_engine.register(self.event_type, self.process_event)
 
     def process_event(self, event: Event) -> None:
         """
@@ -291,8 +291,10 @@ class BaseMonitor(QtWidgets.QTableWidget):
                 row_cells[header] = cell
 
         if self.data_key:
+
             key = data.__getattribute__(self.data_key)
             self.cells[key] = row_cells
+
 
     def update_old_row(self, data: Any) -> None:
         """
@@ -302,6 +304,7 @@ class BaseMonitor(QtWidgets.QTableWidget):
         row_cells = self.cells[key]
 
         for header, cell in row_cells.items():
+
             content = data.__getattribute__(header)
             cell.set_content(content, data)
 
@@ -323,7 +326,7 @@ class BaseMonitor(QtWidgets.QTableWidget):
 
         with open(path, "w") as f:
             writer = csv.writer(f, lineterminator="\n")
-
+df
             writer.writerow(self.headers.keys())
 
             for row in range(self.rowCount()):
@@ -618,7 +621,7 @@ class TradingWidget(QtWidgets.QWidget):
         self.order_type_combo.addItems(
             [order_type.value for order_type in OrderType])
 
-        double_validator = QtGui.QDoubleValidator()
+        double_validator = QtGui.QDoubleValidator(-360, 360, 2)
         double_validator.setBottom(0)
 
         self.price_line = QtWidgets.QLineEdit()
