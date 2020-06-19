@@ -55,7 +55,7 @@ def _get_trader_dir(temp_name: str) -> Tuple[Path, Path]:
     # Create .vntrader folder under home path if not exist.
     if not temp_path.exists():
         temp_path.mkdir()
-    print(home_path,'and',temp_path)
+
     return home_path, temp_path
 
 

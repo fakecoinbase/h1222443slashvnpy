@@ -286,6 +286,7 @@ class BacktestingEngine:
 
             try:
                 self.callback(data)
+
             except Exception:
                 self.output("触发异常，回测终止")
                 self.output(traceback.format_exc())
@@ -312,11 +313,11 @@ class BacktestingEngine:
     def calculate_result(self):
         """"""
         self.output("开始计算逐日盯市盈亏")
-
+        print(self.daily_results)
         if not self.trades:
             self.output("成交记录为空，无法计算")
             return
-
+        print(len(self.trades.values()),self.trades.values())
         # Add trade data into daily reuslt.
         for trade in self.trades.values():
             d = trade.datetime.date()
@@ -363,31 +364,32 @@ class BacktestingEngine:
         # Check for init DataFrame
         if df is None:
             # Set all statistics to 0 if no trade.
-            start_date = ""
-            end_date = ""
-            total_days = 0
-            profit_days = 0
-            loss_days = 0
-            end_balance = 0
-            max_drawdown = 0
-            max_ddpercent = 0
+            start_date = ""     #首个交易日
+            end_date = ""       #最后交易日
+            total_days = 0      #总交易日
+            profit_days = 0     #盈利交易日
+            loss_days = 0       #亏损交易日
+
+            end_balance = 0     #结束资金
+            max_drawdown = 0    #最大回撤
+            max_ddpercent = 0   #百分比最大回撤
             max_drawdown_duration = 0
-            total_net_pnl = 0
-            daily_net_pnl = 0
-            total_commission = 0
-            daily_commission = 0
-            total_slippage = 0
-            daily_slippage = 0
-            total_turnover = 0
-            daily_turnover = 0
-            total_trade_count = 0
-            daily_trade_count = 0
+            total_net_pnl = 0           #总盈亏
+            daily_net_pnl = 0           #日均盈亏
+            total_commission = 0        #总手续费
+            daily_commission = 0        #日均手续费
+            total_slippage = 0          #总滑点
+            daily_slippage = 0          #日均滑点
+            total_turnover = 0          #总成交额
+            daily_turnover = 0          #日均成交额
+            total_trade_count = 0       #总成交笔数
+            daily_trade_count = 0       #日均成交笔数
             total_return = 0
             annual_return = 0
-            daily_return = 0
-            return_std = 0
-            sharpe_ratio = 0
-            return_drawdown_ratio = 0
+            daily_return = 0            #日均收益率
+            return_std = 0              #收益标准差
+            sharpe_ratio = 0            #夏普比率
+            return_drawdown_ratio = 0   #收益回撤比
         else:
             # Calculate balance related time series data
             df["balance"] = df["net_pnl"].cumsum() + self.capital
@@ -742,6 +744,7 @@ class BacktestingEngine:
 
     def new_bar(self, bar: BarData):
         """"""
+
         self.bar = bar
         self.datetime = bar.datetime
 
@@ -989,6 +992,8 @@ class BacktestingEngine:
         volume: float
     ):
         """"""
+
+
         self.limit_order_count += 1
 
         order = OrderData(

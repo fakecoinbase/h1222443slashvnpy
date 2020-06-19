@@ -184,6 +184,7 @@ class CtaTemplate(ABC):
         """
         Send a new order.
         """
+
         if self.trading:
             vt_orderids = self.cta_engine.send_order(
                 self, direction, offset, price, volume, stop, lock

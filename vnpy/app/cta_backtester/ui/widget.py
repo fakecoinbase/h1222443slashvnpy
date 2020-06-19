@@ -281,6 +281,7 @@ class BacktesterManager(QtWidgets.QWidget):
         self.statistics_monitor.set_data(statistics)
 
         df = self.backtester_engine.get_result_df()
+        print(df)
         self.chart.set_data(df)
 
         self.trade_button.setEnabled(True)

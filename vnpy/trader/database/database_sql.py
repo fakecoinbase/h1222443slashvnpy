@@ -139,6 +139,7 @@ def init_models(db: Database, driver: Driver):
             save a list of objects, update if exists.
             """
             dicts = [i.to_dict() for i in objs]
+
             with db.atomic():
                 if driver is Driver.POSTGRESQL:
                     for bar in dicts:
