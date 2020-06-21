@@ -313,11 +313,11 @@ class BacktestingEngine:
     def calculate_result(self):
         """"""
         self.output("开始计算逐日盯市盈亏")
-        print(self.daily_results)
+
         if not self.trades:
             self.output("成交记录为空，无法计算")
             return
-        print(len(self.trades.values()),self.trades.values())
+
         # Add trade data into daily reuslt.
         for trade in self.trades.values():
             d = trade.datetime.date()
@@ -448,6 +448,7 @@ class BacktestingEngine:
             return_drawdown_ratio = -total_return / max_ddpercent
 
         # Output
+
         if output:
             self.output("-" * 30)
             self.output(f"首个交易日：\t{start_date}")

@@ -42,6 +42,7 @@ class BacktesterManager(QtWidgets.QWidget):
         self.backtester_engine = main_engine.get_engine(APP_NAME)
         self.class_names = []
         self.settings = {}
+        self.setting_list = {}
 
         self.target_display = ""
 
@@ -67,7 +68,7 @@ class BacktesterManager(QtWidgets.QWidget):
 
         # Setting Part
         self.class_combo = QtWidgets.QComboBox()
-
+        self.class_combo.currentIndexChanged.connect(self.load_backtesting_setting)
         self.symbol_line = QtWidgets.QLineEdit("IF88.CFFEX")
 
         self.interval_combo = QtWidgets.QComboBox()
@@ -75,7 +76,7 @@ class BacktesterManager(QtWidgets.QWidget):
             self.interval_combo.addItem(inteval.value)
 
         end_dt = datetime.now()
-        start_dt = end_dt - timedelta(days=3 * 365)
+        start_dt = end_dt - timedelta(days=50)
 
         self.start_date_edit = QtWidgets.QDateEdit(
             QtCore.QDate(
@@ -225,9 +226,10 @@ class BacktesterManager(QtWidgets.QWidget):
 
     def load_backtesting_setting(self):
         """"""
-        setting = load_json(self.setting_filename)
-        if not setting:
+        self.setting_list = load_json(self.setting_filename)
+        if not self.setting_list.get(self.class_combo.currentText()):
             return
+        setting = self.setting_list[self.class_combo.currentText()]
 
         self.class_combo.setCurrentIndex(
             self.class_combo.findText(setting["class_name"])
@@ -281,7 +283,7 @@ class BacktesterManager(QtWidgets.QWidget):
         self.statistics_monitor.set_data(statistics)
 
         df = self.backtester_engine.get_result_df()
-        print(df)
+
         self.chart.set_data(df)
 
         self.trade_button.setEnabled(True)
@@ -324,7 +326,8 @@ class BacktesterManager(QtWidgets.QWidget):
             "capital": capital,
             "inverse": inverse,
         }
-        save_json(self.setting_filename, backtesting_setting)
+        self.setting_list[self.class_combo.currentText()] = backtesting_setting
+        save_json(self.setting_filename, self.setting_list)
 
         # Get strategy setting
         old_setting = self.settings[class_name]
