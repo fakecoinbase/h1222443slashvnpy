@@ -283,7 +283,7 @@ class BacktesterManager(QtWidgets.QWidget):
         self.statistics_monitor.set_data(statistics)
 
         df = self.backtester_engine.get_result_df()
-
+        print(df.columns)
         self.chart.set_data(df)
 
         self.trade_button.setEnabled(True)
@@ -688,6 +688,7 @@ class BacktesterChart(pg.GraphicsWindow):
         self.dates = {}
 
         self.init_ui()
+
 
     def init_ui(self):
         """"""
