@@ -85,8 +85,9 @@ DIRECTION_CTP2VT[THOST_FTDC_PD_Long] = Direction.LONG
 DIRECTION_CTP2VT[THOST_FTDC_PD_Short] = Direction.SHORT
 
 ORDERTYPE_VT2CTP = {
-    OrderType.LIMIT: THOST_FTDC_OPT_LimitPrice,
-    OrderType.MARKET: THOST_FTDC_OPT_AnyPrice
+    OrderType.MARKET: THOST_FTDC_OPT_AnyPrice,
+    OrderType.LIMIT: THOST_FTDC_OPT_LimitPrice
+
 }
 ORDERTYPE_CTP2VT = {v: k for k, v in ORDERTYPE_VT2CTP.items()}
 
@@ -511,7 +512,13 @@ class CtpTdApi(TdApi):
 
     def onRspOrderAction(self, data: dict, error: dict, reqid: int, last: bool):
         """"""
+
         self.gateway.write_error("交易撤单失败", error)
+
+    def onErrRtnOrderAction(self,data:dict,error:dict):
+        print(error["ErrorMsg"])
+    def onErrRtnOrderInsert(self,data:dict,error:dict):
+        print(error["ErrorMsg"])
 
     def onRspQueryMaxOrderVolume(self, data: dict, error: dict, reqid: int, last: bool):
         """"""
@@ -541,6 +548,7 @@ class CtpTdApi(TdApi):
             return
 
         # Check if contract data received
+
         if data["InstrumentID"] in symbol_exchange_map:
             # Get buffered position object
             key = f"{data['InstrumentID'], data['PosiDirection']}"
@@ -558,6 +566,7 @@ class CtpTdApi(TdApi):
             if position.exchange in [Exchange.SHFE, Exchange.INE]:
                 if data["YdPosition"] and not data["TodayPosition"]:
                     position.yd_volume = data["Position"]
+
             # For other exchange position data update
             else:
                 position.yd_volume = data["Position"] - data["TodayPosition"]
@@ -684,6 +693,7 @@ class CtpTdApi(TdApi):
             datetime=dt,
             gateway_name=self.gateway_name
         )
+
         self.gateway.on_order(order)
 
         self.sysid_orderid_map[data["OrderSysID"]] = orderid
@@ -716,6 +726,7 @@ class CtpTdApi(TdApi):
             datetime=dt,
             gateway_name=self.gateway_name
         )
+
         self.gateway.on_trade(trade)
 
     def onRspForQuoteInsert(self, data: dict, error: dict, reqid: int, last: bool):
@@ -829,6 +840,7 @@ class CtpTdApi(TdApi):
             "MinVolume": 1
         }
 
+
         if req.type == OrderType.FAK:
             ctp_req["OrderPriceType"] = THOST_FTDC_OPT_LimitPrice
             ctp_req["TimeCondition"] = THOST_FTDC_TC_IOC
@@ -907,6 +919,7 @@ class CtpTdApi(TdApi):
         }
 
         self.reqid += 1
+
         self.reqQryInvestorPosition(req, self.reqid)
 
     def close(self):

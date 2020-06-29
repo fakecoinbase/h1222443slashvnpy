@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime, timedelta
 from tzlocal import get_localzone
-
+from copy import copy
 import numpy as np
 import pyqtgraph as pg
 
@@ -283,7 +283,7 @@ class BacktesterManager(QtWidgets.QWidget):
         self.statistics_monitor.set_data(statistics)
 
         df = self.backtester_engine.get_result_df()
-        print(df.columns)
+
         self.chart.set_data(df)
 
         self.trade_button.setEnabled(True)
@@ -1180,14 +1180,14 @@ class CandleChartDialog(QtWidgets.QDialog):
     def update_trades(self, trades: list):
         """"""
         trade_data = []
-
+        self.ixx = 0
         for trade in trades:
             ix = self.dt_ix_map[trade.datetime]
 
             scatter = {
                 "pos": (ix, trade.price),
                 "data": 1,
-                "size": 14,
+                "size": 30,
                 "pen": pg.mkPen((255, 255, 255))
             }
 
@@ -1196,14 +1196,17 @@ class CandleChartDialog(QtWidgets.QDialog):
             else:
                 scatter_symbol = "t"    # Down arrow
 
-            if trade.offset == Offset.OPEN:
-                scatter_brush = pg.mkBrush((255, 255, 0))   # Yellow
+            if ix == self.ixx:
+                scatter_brush = pg.mkBrush((0,255,255))
             else:
-                scatter_brush = pg.mkBrush((0, 0, 255))     # Blue
+                if trade.offset == Offset.OPEN:
+                    scatter_brush = pg.mkBrush((255, 255, 0))   # Yellow
+                else:
+                    scatter_brush = pg.mkBrush((0, 0, 255))     # Blue
 
             scatter["symbol"] = scatter_symbol
             scatter["brush"] = scatter_brush
-
+            self.ixx = copy(ix)
             trade_data.append(scatter)
 
         self.trade_scatter.setData(trade_data)

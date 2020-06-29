@@ -874,6 +874,7 @@ class TradingWidget(QtWidgets.QWidget):
 
         price_text = str(self.price_line.text())
         if not price_text:
+
             price = 0
         else:
             price = float(price_text)

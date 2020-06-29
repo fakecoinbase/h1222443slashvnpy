@@ -281,6 +281,7 @@ class StrategyManager(QtWidgets.QFrame):
 
     def remove_strategy(self):
         """"""
+
         result = self.cta_engine.remove_strategy(self.strategy_name)
 
         # Only remove strategy gui manager if it has been removed from engine
@@ -341,11 +342,7 @@ class StopOrderMonitor(BaseMonitor):
     sorting = True
 
     headers = {
-        "stop_orderid": {
-            "display": "停止委托号",
-            "cell": BaseCell,
-            "update": False,
-        },
+        "stop_orderid": {"display": "停止委托号","cell": BaseCell,"update": False,},
         "vt_orderids": {"display": "限价委托号", "cell": BaseCell, "update": True},
         "vt_symbol": {"display": "本地代码", "cell": BaseCell, "update": False},
         "direction": {"display": "方向", "cell": EnumCell, "update": False},
