@@ -318,6 +318,8 @@ class CtaEngine(BaseEngine):
 
         # Send Orders
         vt_orderids = []
+        if not req_list:
+            self.write_log("转换后[]为空，策略没有成交",strategy)
 
         for req in req_list:
             req.reference = strategy.strategy_name      # Add strategy name as order reference

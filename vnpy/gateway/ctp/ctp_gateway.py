@@ -308,8 +308,11 @@ class CtpMdApi(MdApi):
         if not exchange:
             return
 
+
         timestamp = f"{self.current_date} {data['UpdateTime']}.{int(data['UpdateMillisec']/100)}"
+
         dt = datetime.strptime(timestamp, "%Y%m%d %H:%M:%S.%f")
+
         dt = dt.replace(tzinfo=CHINA_TZ)
 
         tick = TickData(
@@ -551,7 +554,7 @@ class CtpTdApi(TdApi):
 
         if data["InstrumentID"] in symbol_exchange_map:
             # Get buffered position object
-            key = f"{data['InstrumentID'], data['PosiDirection']}"
+            key = f"{data['InstrumentID']},{data['PosiDirection']}"
             position = self.positions.get(key, None)
             if not position:
                 position = PositionData(

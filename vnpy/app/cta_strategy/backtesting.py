@@ -504,7 +504,7 @@ class BacktestingEngine:
             "total_turnover": total_turnover,
             "daily_turnover": daily_turnover,
             "total_trade_count": total_trade_count,
-            "daily_trade_count": daily_trade_count,
+            "daily_trade_count": f"{daily_trade_count:.2f}",
             "total_return": total_return,
             "annual_return": annual_return,
             "daily_return": daily_return,

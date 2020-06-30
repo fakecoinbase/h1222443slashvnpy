@@ -163,11 +163,12 @@ class TimeCell(BaseCell):
             return
 
         content = content.astimezone(self.local_tz)
+
         timestamp = content.strftime("%H:%M:%S")
 
-        millisecond = int(content.microsecond / 1000)
-        if millisecond:
-            timestamp = f"{timestamp}.{millisecond}"
+        millisecond = int(content.microsecond / 100000)
+
+        timestamp = f"{timestamp}.{millisecond}"
 
         self.setText(timestamp)
         self._data = data
@@ -358,6 +359,7 @@ class TickMonitor(BaseMonitor):
         "name": {"display": "名称", "cell": BaseCell, "update": True},
         "last_price": {"display": "最新价", "cell": BaseCell, "update": True},
         "volume": {"display": "成交量", "cell": BaseCell, "update": True},
+        "open_interest": {"display": "持仓量", "cell": BaseCell, "update": True},
         "open_price": {"display": "开盘价", "cell": BaseCell, "update": True},
         "high_price": {"display": "最高价", "cell": BaseCell, "update": True},
         "low_price": {"display": "最低价", "cell": BaseCell, "update": True},

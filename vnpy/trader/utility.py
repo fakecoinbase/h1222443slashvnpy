@@ -342,6 +342,7 @@ class ArrayManager(object):
         """
         Update new bar data into array manager.
         """
+
         self.count += 1
         if not self.inited and self.count >= self.size:
             self.inited = True
