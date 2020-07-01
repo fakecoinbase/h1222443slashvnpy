@@ -4,9 +4,9 @@ Defines constants and objects used in CtaStrategy App.
 
 from dataclasses import dataclass, field
 from enum import Enum
-from datetime import timedelta
+from datetime import timedelta,datetime
 
-from vnpy.trader.constant import Direction, Offset, Interval
+from vnpy.trader.constant import Direction, Offset, Interval,Status,Exchange,OrderType
 
 APP_NAME = "CtaStrategy"
 STOPORDER_PREFIX = "STOP"
@@ -41,10 +41,29 @@ class StopOrder:
     vt_orderids: list = field(default_factory=list)
     status: StopOrderStatus = StopOrderStatus.WAITING
 
+@dataclass
+class LimitOrder:
+    vt_symbol: str
+    exchange: Exchange
+    vt_orderid: str
+    strategy_name: str
+
+    type: OrderType = OrderType.LIMIT
+    direction: Direction = None
+    offset: Offset = Offset.NONE
+    price: float = 0
+    volume: float = 0
+    traded: float = 0
+    status: Status = Status.SUBMITTING
+    datetime: datetime = None
+
+
 
 EVENT_CTA_LOG = "eCtaLog"
 EVENT_CTA_STRATEGY = "eCtaStrategy"
 EVENT_CTA_STOPORDER = "eCtaStopOrder"
+EVENT_CTA_LIMITORDER = "eCtaLimitOrder"
+
 
 INTERVAL_DELTA_MAP = {
     Interval.MINUTE: timedelta(minutes=1),

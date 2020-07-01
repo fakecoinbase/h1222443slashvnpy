@@ -46,10 +46,12 @@ from .base import (
     EVENT_CTA_LOG,
     EVENT_CTA_STRATEGY,
     EVENT_CTA_STOPORDER,
+    EVENT_CTA_LIMITORDER,
     EngineType,
     StopOrder,
     StopOrderStatus,
-    STOPORDER_PREFIX
+    STOPORDER_PREFIX,
+    LimitOrder
 )
 from .template import CtaTemplate
 
@@ -189,7 +191,24 @@ class CtaEngine(BaseEngine):
                 vt_orderids=[order.vt_orderid],
             )
             self.call_strategy_func(strategy, strategy.on_stop_order, so)
+        else:
+            limit_order = LimitOrder(
+                vt_symbol = order.vt_symbol,
+                exchange=order.exchange,
+                vt_orderid=order.vt_orderid,
+                strategy_name = strategy.strategy_name,
 
+                type=order.type,
+                direction=order.direction,
+                offset=order.offset,
+                price=order.price,
+                volume=order.volume,
+                traded=order.traded,
+                status=order.status,
+                datetime=order.datetime
+
+            )
+            self.put_limit_order_event(limit_order)
         # Call strategy on_order function
         self.call_strategy_func(strategy, strategy.on_order, order)
 
@@ -503,6 +522,7 @@ class CtaEngine(BaseEngine):
         """
         Cancel all active orders of a strategy.
         """
+
         vt_orderids = self.strategy_orderid_map[strategy.strategy_name]
         if not vt_orderids:
             return
@@ -898,6 +918,13 @@ class CtaEngine(BaseEngine):
         Put an event to update stop order status.
         """
         event = Event(EVENT_CTA_STOPORDER, stop_order)
+        self.event_engine.put(event)
+
+    def put_limit_order_event(self, limit_order: LimitOrder):
+        """
+        Put an event to update stop order status.
+        """
+        event = Event(EVENT_CTA_LIMITORDER, limit_order)
         self.event_engine.put(event)
 
     def put_strategy_event(self, strategy: CtaTemplate):

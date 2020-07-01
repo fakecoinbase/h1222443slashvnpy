@@ -12,9 +12,17 @@ from ..base import (
     APP_NAME,
     EVENT_CTA_LOG,
     EVENT_CTA_STOPORDER,
-    EVENT_CTA_STRATEGY
+    EVENT_CTA_STRATEGY,
+    EVENT_CTA_LIMITORDER
 )
 from ..engine import CtaEngine
+
+from vnpy.trader.event import (
+    EVENT_TICK,
+    EVENT_ORDER,
+    EVENT_TRADE,
+    EVENT_POSITION
+)
 
 
 class CtaManager(QtWidgets.QWidget):
@@ -75,6 +83,10 @@ class CtaManager(QtWidgets.QWidget):
             self.main_engine, self.event_engine
         )
 
+        self.limit_order_monitor = LimitOrderMonitor(
+            self.main_engine,self.event_engine
+        )
+
         # Set layout
         hbox1 = QtWidgets.QHBoxLayout()
         hbox1.addWidget(self.class_combo)
@@ -88,7 +100,8 @@ class CtaManager(QtWidgets.QWidget):
         grid = QtWidgets.QGridLayout()
         grid.addWidget(scroll_area, 0, 0, 2, 1)
         grid.addWidget(self.stop_order_monitor, 0, 1)
-        grid.addWidget(self.log_monitor, 1, 1)
+        grid.addWidget(self.limit_order_monitor,1,1)
+        grid.addWidget(self.log_monitor, 2, 1)
 
         vbox = QtWidgets.QVBoxLayout()
         vbox.addLayout(hbox1)
@@ -342,7 +355,7 @@ class StopOrderMonitor(BaseMonitor):
     sorting = True
 
     headers = {
-        "stop_orderid": {"display": "停止委托号","cell": BaseCell,"update": False,},
+        "stop_orderid": {"display": "停止单委托号","cell": BaseCell,"update": False,},
         "vt_orderids": {"display": "限价委托号", "cell": BaseCell, "update": True},
         "vt_symbol": {"display": "本地代码", "cell": BaseCell, "update": False},
         "direction": {"display": "方向", "cell": EnumCell, "update": False},
@@ -354,6 +367,25 @@ class StopOrderMonitor(BaseMonitor):
         "strategy_name": {"display": "策略名", "cell": BaseCell, "update": False},
     }
 
+class LimitOrderMonitor(BaseMonitor):
+    """
+    Monitor for local stop order.
+    """
+
+    event_type = EVENT_CTA_LIMITORDER
+    data_key = "vt_orderid"
+    sorting = True
+
+    headers = {
+        "vt_orderid": {"display": "委托号", "cell": BaseCell, "update": True},
+        "vt_symbol": {"display": "本地代码", "cell": BaseCell, "update": False},
+        "direction": {"display": "方向", "cell": EnumCell, "update": False},
+        "offset": {"display": "开平", "cell": EnumCell, "update": False},
+        "price": {"display": "价格", "cell": BaseCell, "update": False},
+        "volume": {"display": "数量", "cell": BaseCell, "update": False},
+        "status": {"display": "状态", "cell": EnumCell, "update": True},
+        "strategy_name": {"display": "策略名", "cell": BaseCell, "update": False},
+    }
 
 class LogMonitor(BaseMonitor):
     """
